@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Easiest Way to Study</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+</head>
+<body>
+
+<!-- Header -->
+<header class="header">
+    <div class="container header-inner">
+        <div class="logo">
+            <i class="fas fa-book-open-reader"></i>
+            <h1 data-i18n="siteTitle">أسهل طريقة للمذاكرة</h1>
+        </div>
+        <div class="header-controls">
+            <button class="ctrl-btn" id="langToggle" title="Language">
+                <i class="fas fa-globe"></i>
+                <span id="langLabel">EN</span>
+            </button>
+            <button class="ctrl-btn" id="themeToggle" title="Theme">
+                <i class="fas fa-moon" id="themeIcon"></i>
+            </button>
+        </div>
+    </div>
+</header>
+
+<!-- Hero -->
+<section class="hero">
+    <div class="container">
+        <h2 data-i18n="heroTitle">حوّل أي محاضرة لشرح مبسط + امتحان فوري</h2>
+        <p data-i18n="heroDesc">ارفع PDF، فيديو، أو حط رابط وهنشرحهولك بالعربي أو الإنجليزي</p>
+    </div>
+</section>
+
+<!-- Upload Section -->
+<main class="container">
+    <section class="upload-section" id="uploadSection">
+
+        <div class="upload-grid">
+            <!-- File Upload -->
+            <div class="upload-card">
+                <div class="card-icon"><i class="fas fa-file-pdf"></i></div>
+                <h3 data-i18n="uploadFile">ارفع ملف المحاضرة</h3>
+                <p class="card-hint" data-i18n="uploadHint">PDF, TXT, DOC — حتى 50MB</p>
+                <div class="drop-zone" id="dropZone">
+                    <input type="file" id="fileInput" accept=".pdf,.txt,.doc,.docx,.rtf,.csv" hidden>
+                    <i class="fas fa-cloud-arrow-up"></i>
+                    <span data-i18n="dropText">اسحب الملف هنا أو اضغط</span>
+                </div>
+                <div class="file-info hidden" id="fileInfo">
+                    <i class="fas fa-check-circle"></i>
+                    <span id="fileName"></span>
+                    <button class="remove-btn" id="removeFile"><i class="fas fa-xmark"></i></button>
+                </div>
+            </div>
+
+            <!-- URL Input -->
+            <div class="upload-card">
+                <div class="card-icon"><i class="fas fa-link"></i></div>
+                <h3 data-i18n="uploadURL">أو أدخل روابط</h3>
+                <p class="card-hint" data-i18n="urlHint">رابط مقال أو PDF على الإنترنت</p>
+                <div class="url-inputs">
+                    <div class="url-field">
+                        <i class="fas fa-link"></i>
+                        <input type="url" id="url1" placeholder="https://example.com/article">
+                    </div>
+                    <div class="url-field">
+                        <i class="fas fa-link"></i>
+                        <input type="url" id="url2" placeholder="https://example.com/notes.pdf">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Options -->
+        <div class="options-card">
+            <div class="options-grid">
+                <div class="form-group">
+                    <label data-i18n="lecName">اسم المحاضرة</label>
+                    <input type="text" id="lectureName" data-i18n-placeholder="lecNamePH" placeholder="مثال: الذكاء الاصطناعي">
+                </div>
+                <div class="form-group">
+                    <label data-i18n="subject">المادة</label>
+                    <input type="text" id="subject" data-i18n-placeholder="subjectPH" placeholder="مثال: علوم الحاسب">
+                </div>
+                <div class="form-group">
+                    <label data-i18n="outLang">لغة الشرح</label>
+                    <select id="outLang">
+                        <option value="ar">العربية</option>
+                        <option value="en">English</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <button class="btn-analyze" id="analyzeBtn">
+            <i class="fas fa-wand-magic-sparkles"></i>
+            <span data-i18n="analyzeBtn">حلّل المحاضرة الآن</span>
+        </button>
+    </section>
+
+    <!-- Loading -->
+    <section class="loading-section hidden" id="loadingSection">
+        <div class="loader">
+            <div class="loader-spinner"></div>
+            <h3 data-i18n="loading">جاري تحليل المحاضرة...</h3>
+            <p data-i18n="loadingHint">قد يستغرق الأمر دقيقة</p>
+        </div>
+    </section>
+
+    <!-- Results -->
+    <section class="results-section hidden" id="resultsSection">
+        <div class="tabs">
+            <button class="tab active" data-tab="summary">
+                <i class="fas fa-book-open"></i>
+                <span data-i18n="tabSummary">الشرح</span>
+            </button>
+            <button class="tab" data-tab="exam">
+                <i class="fas fa-clipboard-check"></i>
+                <span data-i18n="tabExam">الامتحان</span>
+            </button>
+            <button class="tab" data-tab="notes">
+                <i class="fas fa-lightbulb"></i>
+                <span data-i18n="tabNotes">ملاحظات</span>
+            </button>
+        </div>
+
+        <!-- Summary -->
+        <div class="tab-panel active" id="panel-summary">
+            <div class="panel-header">
+                <h3 data-i18n="summaryTitle">شرح المحاضرة</h3>
+                <div class="panel-actions">
+                    <button class="btn-sm" id="dlSummaryPDF">
+                        <i class="fas fa-file-pdf"></i>
+                        <span data-i18n="dlPDF">تحميل PDF</span>
+                    </button>
+                    <button class="btn-sm" id="copySummary">
+                        <i class="fas fa-copy"></i>
+                        <span data-i18n="copy">نسخ</span>
+                    </button>
+                </div>
+            </div>
+            <div class="panel-body" id="summaryBody"></div>
+        </div>
+
+        <!-- Exam -->
+        <div class="tab-panel" id="panel-exam">
+            <div class="panel-header">
+                <h3 data-i18n="examTitle">امتحان 20 سؤال</h3>
+                <div class="panel-actions">
+                    <button class="btn-sm" id="resetExamBtn">
+                        <i class="fas fa-rotate-right"></i>
+                        <span data-i18n="reset">إعادة</span>
+                    </button>
+                </div>
+            </div>
+            <div class="panel-body" id="examBody"></div>
+            <div class="exam-footer">
+                <button class="btn-grade" id="gradeBtn">
+                    <i class="fas fa-check-double"></i>
+                    <span data-i18n="gradeBtn">تصحيح</span>
+                </button>
+                <div class="score-box hidden" id="scoreBox">
+                    <div class="score-circle"><span id="scoreNum">0/20</span></div>
+                    <p id="scoreMsg"></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Notes -->
+        <div class="tab-panel" id="panel-notes">
+            <div class="panel-header">
+                <h3 data-i18n="notesTitle">ملاحظات مهمة</h3>
+                <div class="panel-actions">
+                    <button class="btn-sm" id="dlNotesPDF">
+                        <i class="fas fa-file-pdf"></i>
+                        <span data-i18n="dlPDF">تحميل PDF</span>
+                    </button>
+                </div>
+            </div>
+            <div class="panel-body" id="notesBody"></div>
+        </div>
+
+        <button class="btn-back" id="backBtn">
+            <i class="fas fa-arrow-right"></i>
+            <span data-i18n="backBtn">محاضرة جديدة</span>
+        </button>
+    </section>
+</main>
+
+<footer class="footer">
+    <p>The Easiest Way to Study &copy; 2025</p>
+</footer>
+
+<div class="toast-box" id="toastBox"></div>
+
+<script src="app.js"></script>
+</body>
+</html>
